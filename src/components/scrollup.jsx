@@ -38,16 +38,7 @@ export default function BackToTop() {
           <ChevronUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-500" />
         </div>
 
-        {/* The Label */}
-        <div className="flex flex-col items-start overflow-hidden">
-          <span className="text-[9px] uppercase tracking-[0.4em] text-stone-500 font-bold leading-none">
-            Ascent
-          </span>
-          <span className="text-[8px] font-mono text-[#A68A64] opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-            REF_0.0.0.0
-          </span>
-        </div>
-
+      
         {/* Animated Progress Ring (Visual Only) */}
         <div className="absolute inset-0 rounded-full border border-[#A68A64]/10 scale-110 group-hover:scale-125 transition-transform duration-1000" />
       </button>
