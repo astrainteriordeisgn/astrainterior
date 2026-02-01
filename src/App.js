@@ -9,11 +9,15 @@ import Footer from './components/Footer';
 import PortfolioPage from './components/portfolio';
 import Services from './components/Services';
 import Whatsapp from './components/whatsapp';
+import ScrollToTop from './components/scrolltotop';
+import Scrollup from './components/scrollup';
 function App() {
   return (
     <Router>
       <Navigation />
       <Whatsapp />
+      <ScrollToTop />
+      <Scrollup />  
       
       <Routes>
         <Route path="/" element={<Homepage />} />

@@ -73,7 +73,7 @@ export default function Hero() {
               <div key={idx}>
                 <p className="text-3xl font-serif text-stone-900">{stat}</p>
                 <p className="text-xs uppercase tracking-widest mt-1 text-stone-500 font-bold">
-                  {idx === 0 ? 'Curated Items' : idx === 1 ? 'Design Awards' : 'Styling Consult'}
+                  {idx === 0 ? 'Curated Items' : idx === 1 ? 'Design' : 'Styling Consult'}
                 </p>
               </div>
             ))}
