@@ -3,12 +3,12 @@ import { ArrowUpRight, Minus, MoveRight } from 'lucide-react';
 import Lenis from "@studio-freight/lenis";
 
 // Import your project images here
-import Img1 from '../assests/astrahero.png';
-import Img2 from '../assests/astrahero.png';
-import Img3 from '../assests/astrahero.png';
-import Img4 from '../assests/astrahero.png';
-import Img5 from '../assests/astrahero.png';
-import Img6 from '../assests/astrahero.png';
+import Img1 from '../assests/penthouse.png';
+import Img2 from '../assests/amber wood.webp'
+import Img3 from '../assests/Electrical & Lighting.webp';
+import Img4 from '../assests/Sofa Redesign.webp';
+import Img5 from '../assests/Commercial.webp';
+import Img6 from '../assests/Residential.webp';
 
 const projects = [
   { id: '01', title: 'The Obsidian Penthouse', category: 'Interior Design', image: Img1 },

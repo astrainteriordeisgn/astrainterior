@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Clock, Home } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Clock, Home, Instagram, Facebook } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -99,15 +99,15 @@ export default function Contact() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Estimated Budget</label>
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Investment Range</label>
                   <select
                     name="budget"
                     className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors"
                   >
-                    <option>$25k - $50k</option>
-                    <option>$50k - $150k</option>
-                    <option>$150k - $500k</option>
-                    <option>$500k+</option>
+                    <option>Standard Tier</option>
+                    <option>Premium Tier</option>
+                    <option>Luxury Tier</option>
+                    <option>Ultra-Luxury / Bespoke</option>
                   </select>
                 </div>
               </div>
@@ -149,15 +149,25 @@ export default function Contact() {
                   <Mail className="w-6 h-6 text-[#A68A64] mt-1" />
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Email</p>
-                    <p className="text-stone-300 font-light">curate@astra-interior.com</p>
+                    <p className="text-stone-300 font-light">astrainterior83@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-6">
                   <Phone className="w-6 h-6 text-[#A68A64] mt-1" />
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Private Line</p>
-                    <p className="text-stone-300 font-light">+91 85319 85733</p>
+                    <p className="text-stone-300 font-light">+91 93454 45898</p>
                   </div>
+                </div>
+                
+                {/* Social Links */}
+                <div className="pt-6 flex space-x-6 border-t border-white/10">
+                  <a href="https://www.instagram.com/astra_.interior/" target="_blank" rel="noreferrer" className="text-stone-400 hover:text-[#A68A64] transition-colors">
+                    <Instagram className="w-6 h-6" />
+                  </a>
+                  <a href="https://www.facebook.com/profile.php?id=61562835308067" target="_blank" rel="noreferrer" className="text-stone-400 hover:text-[#A68A64] transition-colors">
+                    <Facebook className="w-6 h-6" />
+                  </a>
                 </div>
               </div>
             </div>

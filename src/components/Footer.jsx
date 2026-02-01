@@ -1,5 +1,5 @@
-import { Facebook, Twitter, Instagram, Linkedin, ArrowRight } from 'lucide-react';
-import Logo from '../assests/BUS (38).png'; // Ensure you have your Astra logo
+import { Facebook, Instagram, ArrowRight, Mail, Phone, MapPin } from 'lucide-react';
+import Logo from '../assests/BUS (38).png'; // Ensure path is correct
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,65 +19,67 @@ export default function Footer() {
       <div className="relative z-10 max-w-[1600px] mx-auto px-6 lg:px-16 py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
           
-          {/* Brand Identity */}
+          {/* Brand Identity & Socials */}
           <div className="space-y-8">
             <div className="mb-6">
-              <img src={Logo} alt="Astra Interior" className="h-16 w-auto brightness-0 invert" />
+              <img src={Logo} alt="Astra Interior" className="h-20 w-auto brightness-0 invert" />
             </div>
             <p className="text-stone-400 leading-relaxed font-light italic text-lg">
               "Crafting timeless sanctuaries where architectural precision meets the soul of modern living."
             </p>
             <div className="flex space-x-5">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
-                <a
-                  key={index}
-                  href="/contact"
-                  className="w-10 h-10 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-white hover:border-[#A68A64] transition-all duration-500 rounded-none"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+              <a
+                href="https://www.instagram.com/astra_.interior/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-white hover:border-[#A68A64] transition-all duration-500"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61562835308067"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 border border-stone-700 flex items-center justify-center text-stone-400 hover:text-white hover:border-[#A68A64] transition-all duration-500"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
-          {/* Curated Services */}
-          <div>
-            <h4 className="text-[#A68A64] font-serif font-bold mb-8 text-xl tracking-tight">Our Expertise</h4>
-            <ul className="space-y-4">
-              {[
-                'Full Interior Design',
-                'Bespoke Furniture',
-                'Electrical & Lighting',
-                'Sofa Redesign',
-                'Commercial Spaces',
-                'Material Consultation'
-              ].map((item) => (
-                <li key={item}>
-                  <a href="/contact" className="text-stone-400 hover:text-[#A68A64] transition-all flex items-center group text-sm uppercase tracking-widest font-medium">
-                    <span className="w-0 group-hover:w-4 h-[1px] bg-[#A68A64] mr-0 group-hover:mr-2 transition-all duration-300"></span>
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Quick Contact Info */}
+          <div className="space-y-8">
+            <h4 className="text-[#A68A64] font-serif font-bold text-xl tracking-tight">Contact Studio</h4>
+            <div className="space-y-6">
+              <a href="tel:+919345445898" className="flex items-center space-x-4 text-stone-400 hover:text-white transition-colors group">
+                <Phone className="w-5 h-5 text-[#A68A64]" />
+                <span className="text-sm font-light">+91 93454 45898</span>
+              </a>
+              <a href="mailto:astrainterior83@gmail.com" className="flex items-center space-x-4 text-stone-400 hover:text-white transition-colors group">
+                <Mail className="w-5 h-5 text-[#A68A64]" />
+                <span className="text-sm font-light">astrainterior83@gmail.com</span>
+              </a>
+              <div className="flex items-start space-x-4 text-stone-400">
+                <MapPin className="w-5 h-5 text-[#A68A64] shrink-0" />
+                <span className="text-sm font-light">Race Course, Coimbatore,<br />Tamil Nadu, India</span>
+              </div>
+            </div>
           </div>
 
-          {/* Studio Links */}
+          {/* Studio Navigation */}
           <div>
             <h4 className="text-[#A68A64] font-serif font-bold mb-8 text-xl tracking-tight">The Studio</h4>
             <ul className="space-y-4">
               {[
-                'About Astra',
-                'Featured Work',
-                'Design Journal',
-                'Our Process',
-                'Private Inquiry',
-                'Careers'
+                { name: 'About Astra', path: '/about' },
+                { name: 'Our Portfolio', path: '/port' },
+                { name: 'Design Journal', path: '/blog' },
+                { name: 'Private Inquiry', path: '/contact' }
               ].map((item) => (
-                <li key={item}>
-                  <a href="/contact" className="text-stone-400 hover:text-[#A68A64] transition-all flex items-center group text-sm uppercase tracking-widest font-medium">
+                <li key={item.name}>
+                  <a href={item.path} className="text-stone-400 hover:text-[#A68A64] transition-all flex items-center group text-sm uppercase tracking-widest font-medium">
                     <span className="w-0 group-hover:w-4 h-[1px] bg-[#A68A64] mr-0 group-hover:mr-2 transition-all duration-300"></span>
-                    {item}
+                    {item.name}
                   </a>
                 </li>
               ))}
@@ -88,7 +90,7 @@ export default function Footer() {
           <div className="bg-[#36271C] p-8 border border-stone-800">
             <h4 className="text-white font-serif font-bold mb-4 text-xl">The Newsletter</h4>
             <p className="text-stone-400 mb-8 text-sm font-light leading-relaxed">
-              Join our exclusive list for seasonal design catalogs and bespoke furniture releases.
+              Subscribe for seasonal design catalogs and bespoke furniture releases.
             </p>
             <div className="relative flex flex-col space-y-4">
               <input
@@ -97,7 +99,7 @@ export default function Footer() {
                 className="w-full px-0 py-3 bg-transparent border-b border-stone-700 text-white placeholder-stone-600 focus:outline-none focus:border-[#A68A64] transition-colors"
               />
               <button className="flex items-center justify-between w-full py-4 bg-[#A68A64] text-white px-6 uppercase tracking-[0.3em] text-[10px] font-bold hover:bg-[#8E7350] transition-all group">
-                Subscribe <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                Join Circle <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
               </button>
             </div>
           </div>
@@ -111,12 +113,12 @@ export default function Footer() {
                 © {currentYear} Astra Interior Design Studio
               </p>
               <p className="text-stone-600 text-[9px] uppercase tracking-widest">
-                Handcrafted Excellence in Coimbatore, India.
+                Handcrafted Excellence in Coimbatore.
               </p>
             </div>
             
             <div className="flex space-x-10">
-              {['Privacy', 'Legal', 'Shipping'].map((link) => (
+              {['Privacy', 'Terms', 'Shipping'].map((link) => (
                 <a key={link} href="/contact" className="text-stone-500 hover:text-[#A68A64] text-[10px] uppercase tracking-widest transition-colors font-bold">
                   {link}
                 </a>

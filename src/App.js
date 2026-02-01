@@ -8,10 +8,12 @@ import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import PortfolioPage from './components/portfolio';
 import Services from './components/Services';
+import Whatsapp from './components/whatsapp';
 function App() {
   return (
     <Router>
       <Navigation />
+      <Whatsapp />
       
       <Routes>
         <Route path="/" element={<Homepage />} />
