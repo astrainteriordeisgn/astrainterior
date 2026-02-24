@@ -1,14 +1,22 @@
 import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom'; // Added for navigation
 import { Compass, PencilRuler, Trees} from "lucide-react";
 import Lenis from "@studio-freight/lenis";
 
 export default function About() {
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
+
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
     return () => lenis.destroy();
   }, []);
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
 
   return (
     <section id="about" className="relative py-24 bg-[#FAF9F6] overflow-hidden">
@@ -56,10 +64,13 @@ export default function About() {
         {/* MIDDLE SECTION: Staggered Portfolio & Stats */}
         <div className="grid lg:grid-cols-3 gap-12 items-start mb-40">
           
-          {/* Item 1: The Experience */}
-          <div className="pt-20">
+          {/* Item 1: The Experience - Redirects to Services */}
+          <div 
+            className="pt-20 cursor-pointer group" 
+            onClick={() => navigate('/services')}
+          >
             <div className="aspect-[4/5] bg-stone-200 mb-8 overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover" alt="Detail" />
+              <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detail" />
             </div>
             <h3 className="text-4xl font-serif text-[#2C1E14] mb-4">02 <span className="text-xl align-top italic text-[#A68A64]">Years</span></h3>
             <p className="text-stone-500 text-sm font-light uppercase tracking-widest leading-relaxed">
@@ -67,31 +78,34 @@ export default function About() {
             </p>
           </div>
 
-          {/* Item 2: The Projects */}
-          <div className="lg:mt-[-5rem] border-x border-stone-200 px-12 pb-12">
+          {/* Item 2: The Projects - Redirects to Portfolio */}
+          <div 
+            className="lg:mt-[-5rem] border-x border-stone-200 px-12 pb-12 cursor-pointer group"
+            onClick={() => navigate('/port')}
+          >
             <h3 className="text-4xl font-serif text-[#2C1E14] mb-4">40+ <span className="text-xl align-top italic text-[#A68A64]">Projects</span></h3>
             <p className="text-stone-500 text-sm font-light uppercase tracking-widest leading-relaxed mb-8">
               From minimalist penthouses to boutique offices across the region.
             </p>
             <div className="aspect-[4/5] bg-stone-200 overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover" alt="Detail" />
+              <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detail" />
             </div>
           </div>
 
           {/* Item 3: The Philosophy */}
           <div className="pt-40">
              <div className="flex flex-col space-y-12">
-                {[
-                  { icon: Compass, title: "Spatial Logic", desc: "Scientific flow meets artistic intent." },
-                  { icon: PencilRuler, title: "Bespoke Art", desc: "Every furniture piece is tailor-made." },
-                  { icon: Trees, title: "Pure Elements", desc: "Organic stones and ethically sourced oaks." }
-                ].map((item, i) => (
-                  <div key={i} className="group">
-                    <item.icon className="w-6 h-6 text-[#A68A64] mb-4 group-hover:scale-110 transition-transform" />
-                    <h5 className="font-serif text-[#2C1E14] text-xl mb-2">{item.title}</h5>
-                    <p className="text-xs text-stone-400 uppercase tracking-widest">{item.desc}</p>
-                  </div>
-                ))}
+               {[
+                 { icon: Compass, title: "Spatial Logic", desc: "Scientific flow meets artistic intent." },
+                 { icon: PencilRuler, title: "Bespoke Art", desc: "Every furniture piece is tailor-made." },
+                 { icon: Trees, title: "Pure Elements", desc: "Organic stones and ethically sourced oaks." }
+               ].map((item, i) => (
+                 <div key={i} className="group">
+                   <item.icon className="w-6 h-6 text-[#A68A64] mb-4 group-hover:scale-110 transition-transform" />
+                   <h5 className="font-serif text-[#2C1E14] text-xl mb-2">{item.title}</h5>
+                   <p className="text-xs text-stone-400 uppercase tracking-widest">{item.desc}</p>
+                 </div>
+               ))}
              </div>
           </div>
         </div>
@@ -108,8 +122,11 @@ export default function About() {
               Ready to redefine your <br /> 
               <span className="text-[#A68A64]">personal sanctuary?</span>
             </h3>
-            <button className="px-16 py-6 border border-[#A68A64] text-[#A68A64] uppercase tracking-[0.4em] text-xs font-bold hover:bg-[#A68A64] hover:text-white transition-all duration-500">
-              Start a Conversation
+            <button 
+              onClick={handleWhatsAppRedirect}
+              className="px-16 py-6 border border-[#A68A64] text-[#A68A64] uppercase tracking-[0.4em] text-xs font-bold hover:bg-[#A68A64] hover:text-white transition-all duration-500 active:scale-95 shadow-2xl"
+            >
+              Start a Conversation via WhatsApp
             </button>
           </div>
         </div>

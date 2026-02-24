@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from 'react-router-dom'; // Added for navigation
 import { ArrowUpRight, Filter, ChevronRight } from "lucide-react";
 import Lenis from "@studio-freight/lenis";
 
@@ -52,6 +52,8 @@ const works = [
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState("All Collections");
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
 
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
@@ -59,6 +61,10 @@ export default function PortfolioPage() {
     requestAnimationFrame(raf);
     return () => lenis.destroy();
   }, []);
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
 
   const filteredWorks = activeCategory === "All Collections" 
     ? works 
@@ -131,7 +137,8 @@ export default function PortfolioPage() {
             {filteredWorks.map((work, idx) => (
               <div 
                 key={work.id} 
-                className={`group relative flex flex-col ${
+                onClick={() => navigate('/services')} // Added: Click card to go to Services
+                className={`group relative flex flex-col cursor-pointer ${
                   work.size === 'large' ? 'lg:col-span-8' : 
                   work.size === 'medium' ? 'lg:col-span-6' : 'lg:col-span-4'
                 }`}
@@ -166,14 +173,15 @@ export default function PortfolioPage() {
           {/* LOAD MORE / NEXT CHAPTER */}
           <div className="mt-40 text-center border-t border-stone-200 pt-20">
              <p className="text-stone-400 font-serif italic text-2xl mb-12">Looking for something more personal?</p>
-             <button className="group px-16 py-6 border border-[#2C1E14] text-[#2C1E14] uppercase tracking-[0.4em] text-[10px] font-bold hover:bg-[#2C1E14] hover:text-white transition-all duration-500 flex items-center mx-auto">
-               Commission a Private Project <ChevronRight className="ml-4 w-4 h-4 group-hover:translate-x-2 transition-transform" />
+             <button 
+                onClick={handleWhatsAppRedirect} // Added: Redirect to WhatsApp
+                className="group px-16 py-6 border border-[#2C1E14] text-[#2C1E14] uppercase tracking-[0.4em] text-[10px] font-bold hover:bg-[#2C1E14] hover:text-white transition-all duration-500 flex items-center mx-auto active:scale-95"
+             >
+                Commission a Private Project <ChevronRight className="ml-4 w-4 h-4 group-hover:translate-x-2 transition-transform" />
              </button>
           </div>
         </div>
       </main>
-
-
     </div>
   );
 }

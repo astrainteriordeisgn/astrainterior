@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'; // Added for navigation
 import { ArrowUpRight, Sofa, Lightbulb, Home, Hammer, Utensils, Paintbrush } from 'lucide-react';
 
 const services = [
@@ -12,40 +13,47 @@ const services = [
     icon: Utensils,
     title: 'Kitchen & Bath Modular',
     description: 'Ergonomic modular solutions blending German engineering with high-end Italian finishes.',
-    image: 'https://images.unsplash.com/photo-1556911223-053b7567b61a?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.pexels.com/photos/2089698/pexels-photo-2089698.jpeg',
     features: ['Modular Cabinetry', 'Quartz Surfaces', 'Anti-Rust Hardware'],
   },
   {
     icon: Lightbulb,
     title: 'Lighting Architecture',
     description: 'Custom lighting schemes and smart home integration that emphasize architectural features.',
-    image: 'https://images.unsplash.com/photo-1558211583-d28f63069eb8?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.pexels.com/photos/3700369/pexels-photo-3700369.jpeg',
     features: ['Layered Lighting', 'Automation', 'Feature Fixtures'],
   },
   {
     icon: Sofa,
     title: 'Sofa Revamp & Redesign',
     description: 'Premium upholstery and structural restoration using luxury fabrics to breathe life into heirloom pieces.',
-    image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.pexels.com/photos/5824901/pexels-photo-5824901.jpeg',
     features: ['Custom Upholstery', 'Restoration', 'Fabric Sourcing'],
   },
   {
     icon: Hammer,
     title: 'Bespoke Furniture',
     description: 'One-of-a-kind carpentry tailored to your specific dimensions and lifestyle needs.',
-    image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.pexels.com/photos/700549/pexels-photo-700549.png',
     features: ['Handcrafted Tables', 'Wardrobes', 'Wood Finishing'],
   },
   {
     icon: Paintbrush,
-    title: 'Styling & Art Curation',
+    title: 'Painting',
     description: 'The final layer of design—selecting art, textures, and artifacts to tell your unique story.',
-    image: 'https://images.unsplash.com/photo-1534349762230-e0cadf78f5db?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg',
     features: ['Art Consultation', 'Soft Furnishings', 'Decor Curation'],
   },
 ];
 
 export default function Services() {
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
+
   return (
     <section id="services" className="relative py-32 bg-[#FAF9F6] overflow-hidden">
       
@@ -89,7 +97,8 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group flex flex-col bg-white border border-stone-100 hover:shadow-[0_30px_60px_-15px_rgba(44,30,20,0.15)] transition-all duration-500"
+              onClick={() => navigate('/services')} // Redirection to service page
+              className="group flex flex-col bg-white border border-stone-100 hover:shadow-[0_30px_60px_-15px_rgba(44,30,20,0.15)] transition-all duration-500 cursor-pointer"
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden">
                 <img
@@ -122,7 +131,7 @@ export default function Services() {
                 </div>
 
                 <div className="mt-auto pt-6 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-[11px] uppercase tracking-widest text-[#a68a64] font-bold hover:underline cursor-pointer">
+                  <span className="text-[11px] uppercase tracking-widest text-[#a68a64] font-bold hover:underline">
                     View Project Details
                   </span>
                   <div className="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-[#4a3728] group-hover:border-[#4a3728] transition-all">
@@ -134,7 +143,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Bottom Banner */}
+        {/* Bottom Banner with WhatsApp Redirect */}
         <div className="mt-24 relative overflow-hidden bg-gradient-to-br from-[#2c1e14] to-[#4a3728] p-12 md:p-24 text-center">
           <div className="absolute inset-0 opacity-10">
             <svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#grain)" /></svg>
@@ -142,8 +151,11 @@ export default function Services() {
           <h3 className="relative z-10 text-4xl md:text-6xl font-serif text-[#f2e9e4] mb-8 leading-tight">
             Ready to <span className="italic text-[#a68a64]">Astra-fy</span> <br className="hidden md:block" /> your private sanctuary?
           </h3>
-          <button className="relative z-10 px-16 py-5 bg-[#a68a64] text-white uppercase tracking-[0.2em] text-xs font-bold hover:bg-[#8e7350] transition-all shadow-2xl">
-            Book a Personal Consultation
+          <button 
+            onClick={handleWhatsAppRedirect}
+            className="relative z-10 px-16 py-5 bg-[#a68a64] text-white uppercase tracking-[0.2em] text-xs font-bold hover:bg-[#8e7350] transition-all shadow-2xl active:scale-95"
+          >
+            Chat on WhatsApp
           </button>
         </div>
       </div>

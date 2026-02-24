@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Compass, PenTool, ClipboardCheck, Target, Hammer, Key, MoveRight } from "lucide-react";
+import { useNavigate } from 'react-router-dom'; // Added for navigation
+import { Compass, PenTool, ClipboardCheck, Target, Hammer, Key, MoveRight, MessageSquare } from "lucide-react";
 
 const steps = [
   { id: "01", title: "Discovery", sub: "Architectural Audit", desc: "Mapping light orientations and biological rhythms to define the spatial intent.", icon: Compass, img: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200" },
@@ -12,6 +13,12 @@ const steps = [
 
 export default function HyperrealisticFlute() {
   const [active, setActive] = useState(0);
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
 
   return (
     <section className="relative w-full h-screen bg-[#080808] flex items-center justify-center overflow-hidden font-sans">
@@ -56,42 +63,56 @@ export default function HyperrealisticFlute() {
             {steps[active].desc}
           </p>
 
-          <button className="flex items-center space-x-4 group text-white">
-             <span className="uppercase text-[10px] tracking-[0.4em] font-bold group-hover:text-[#A68A64] transition-colors">Project Trajectory</span>
-             <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#A68A64] transition-all">
-                <MoveRight className="w-4 h-4" />
-             </div>
-          </button>
+          <div className="flex flex-col sm:flex-row gap-8">
+            {/* Redirect to Services */}
+            <button 
+              onClick={() => navigate('/services')}
+              className="flex items-center space-x-4 group text-white outline-none"
+            >
+               <span className="uppercase text-[10px] tracking-[0.4em] font-bold group-hover:text-[#A68A64] transition-colors">View Services</span>
+               <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#A68A64] transition-all">
+                  <MoveRight className="w-4 h-4" />
+               </div>
+            </button>
+
+            {/* Redirect to WhatsApp */}
+            <button 
+              onClick={handleWhatsAppRedirect}
+              className="flex items-center space-x-4 group text-white outline-none"
+            >
+               <span className="uppercase text-[10px] tracking-[0.4em] font-bold group-hover:text-[#25D366] transition-colors">Quick Inquiry</span>
+               <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#25D366] transition-all">
+                  <MessageSquare className="w-4 h-4" />
+               </div>
+            </button>
+          </div>
         </div>
 
         {/* Right: Technical Image Monitor */}
         <div className="relative hidden lg:block">
-           <div className="aspect-[4/5] w-[450px] ml-auto relative">
-              {/* Outer Glow */}
+            <div className="aspect-[4/5] w-[450px] ml-auto relative">
               <div className="absolute inset-0 bg-[#A68A64]/20 blur-[100px] rounded-full" />
               
-              {/* Main Image Frame */}
               <div className="relative h-full w-full border border-white/10 p-4 bg-black/40 backdrop-blur-3xl overflow-hidden group">
                  {steps.map((step, idx) => (
                     <img 
-  key={idx}
-  src={step.img} 
-  alt={`Astra Interior Process: ${step.title}`} // Added meaningful alt text
-  className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] object-cover transition-all duration-1000 ${
-    active === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
-  }`}
-/>
+                      key={idx}
+                      src={step.img} 
+                      alt={step.title}
+                      className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] object-cover transition-all duration-1000 ${
+                        active === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+                      }`}
+                    />
                  ))}
-                 {/* HUD Overlays */}
                  <div className="absolute top-8 left-8 border-l border-t border-[#A68A64] w-8 h-8" />
                  <div className="absolute bottom-8 right-8 border-r border-b border-[#A68A64] w-8 h-8" />
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                     <div className="w-24 h-24 border border-white/5 rounded-full flex items-center justify-center animate-spin-slow">
-                       <Target className="w-4 h-4 text-white/20" />
+                        <Target className="w-4 h-4 text-white/20" />
                     </div>
                  </div>
               </div>
-           </div>
+            </div>
         </div>
       </div>
 
@@ -106,7 +127,6 @@ export default function HyperrealisticFlute() {
             <span className={`text-[10px] font-mono transition-all duration-500 ${active === idx ? "text-[#A68A64] -translate-y-2" : "text-stone-600 opacity-0"}`}>
               {step.title}
             </span>
-            {/* The "Flute Key" design */}
             <div className={`
               w-10 h-10 md:w-14 md:h-14 rounded-full border transition-all duration-500 flex items-center justify-center
               ${active === idx 
@@ -116,7 +136,6 @@ export default function HyperrealisticFlute() {
             `}>
               <step.icon className={`w-4 h-4 md:w-6 md:h-6 ${active === idx ? "text-white" : "text-stone-500"}`} />
             </div>
-            {/* Connection line for flute keys */}
             <div className={`h-8 w-[1px] bg-gradient-to-b from-white/20 to-transparent ${active === idx ? "opacity-100" : "opacity-0"}`} />
           </button>
         ))}
@@ -138,4 +157,4 @@ export default function HyperrealisticFlute() {
       `}</style>
     </section>
   );
-} 
+}

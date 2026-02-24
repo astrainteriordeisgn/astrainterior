@@ -1,30 +1,48 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Clock, Home, Instagram, Facebook } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // 1. Import the hook
+import { Mail, Phone, MapPin, Send, Clock, Home } from 'lucide-react';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    projectType: '',
-    budget: '',
-    message: ''
-  });
+  const [result, setResult] = useState("");
+  const navigate = useNavigate(); // 2. Initialize the navigate function
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Inquiry submitted:', formData);
-  };
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setResult("Sending...");
+    
+    const formData = new FormData(event.target);
+    formData.append("access_key", "ebb6356a-ccd3-4584-9c7a-98cec10bbc98");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setResult("Message Sent Successfully!");
+        event.target.reset();
+        
+        // 3. Redirect to the Thank You page
+        // We add a small delay (500ms) so the user sees the success message briefly
+        setTimeout(() => {
+          navigate('/thank-you');
+        }, 500);
+        
+      } else {
+        console.log("Error", data);
+        setResult("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      setResult("Submission error. Check your connection.");
+    }
   };
 
   return (
-    <section
-      id="contact"
-      className="relative py-32 bg-[#FAF9F6] overflow-hidden font-sans"
-    >
-      {/* SVG BACKGROUND: ARCHITECTURAL SITE PLAN */}
+    <section id="contact" className="relative py-32 bg-[#FAF9F6] overflow-hidden font-sans">
+      {/* SVG BACKGROUND */}
       <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <pattern id="site-plan" width="200" height="200" patternUnits="userSpaceOnUse">
@@ -35,9 +53,6 @@ export default function Contact() {
           <rect width="100%" height="100%" fill="url(#site-plan)" />
         </svg>
       </div>
-
-      {/* Subtle Bronze Glows */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#A68A64]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
         
@@ -54,22 +69,20 @@ export default function Contact() {
               Sanctuary
             </span>
           </h2>
-          <p className="text-stone-500 text-xl font-light max-w-2xl mx-auto leading-relaxed italic">
-            "We are currently accepting bespoke projects for the 2026 season. Let us translate your vision into a living masterpiece."
-          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          {/* Form Side (7 cols) */}
+          {/* Form Side */}
           <div className="lg:col-span-7 bg-white p-10 md:p-16 shadow-[30px_30px_60px_-15px_rgba(44,30,20,0.08)] border border-stone-50">
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={onSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Full Name</label>
                   <input
+                    type="text"
                     name="name"
-                    onChange={handleChange}
+                    required
                     className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors placeholder:text-stone-300"
                     placeholder="E.g. Alexander Thorne"
                   />
@@ -77,65 +90,57 @@ export default function Contact() {
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Email Address</label>
                   <input
+                    type="email"
                     name="email"
-                    onChange={handleChange}
+                    required
                     className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors placeholder:text-stone-300"
                     placeholder="alexander@prestige.com"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Type</label>
-                  <select
-                    name="projectType"
-                    className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors"
-                  >
-                    <option>Residential Renovation</option>
-                    <option>Commercial/Office Space</option>
-                    <option>Custom Furniture Commission</option>
-                    <option>Full Interior Transformation</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Investment Range</label>
-                  <select
-                    name="budget"
-                    className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors"
-                  >
-                    <option>Standard Tier</option>
-                    <option>Premium Tier</option>
-                    <option>Luxury Tier</option>
-                    <option>Ultra-Luxury / Bespoke</option>
-                  </select>
-                </div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Type</label>
+                <select
+                  name="project_type"
+                  className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors"
+                >
+                  <option value="Residential Renovation">Residential Renovation</option>
+                  <option value="Commercial Space">Commercial Space</option>
+                  <option value="Furniture Commission">Furniture Commission</option>
+                  <option value="Full Transformation">Full Transformation</option>
+                </select>
               </div>
 
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Vision</label>
                 <textarea
                   name="message"
+                  required
                   rows={4}
                   className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors resize-none placeholder:text-stone-300"
-                  placeholder="Describe your aesthetic goals and spatial requirements..."
+                  placeholder="Describe your aesthetic goals..."
                 />
               </div>
 
-              <button className="group relative w-full py-6 bg-[#2C1E14] text-white flex items-center justify-center space-x-4 overflow-hidden transition-all duration-500">
+              <button type="submit" className="group relative w-full py-6 bg-[#2C1E14] text-white flex items-center justify-center space-x-4 overflow-hidden transition-all duration-500">
                 <span className="relative z-10 uppercase tracking-[0.4em] text-xs font-bold">Send Private Inquiry</span>
                 <Send className="relative z-10 w-4 h-4 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
                 <div className="absolute inset-0 bg-[#A68A64] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
               </button>
+
+              {result && (
+                <p className="text-center text-xs uppercase tracking-[0.2em] font-bold text-[#A68A64] animate-pulse">
+                  {result}
+                </p>
+              )}
             </form>
           </div>
 
-          {/* Info Side (5 cols) */}
+          {/* Info Side */}
           <div className="lg:col-span-5 space-y-12">
             <div className="bg-[#2C1E14] text-white p-12 shadow-2xl relative overflow-hidden">
-               {/* Decorative Icon */}
               <Home className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5 opacity-10" />
-              
               <h3 className="text-3xl font-serif mb-10 relative z-10">The Design Atelier</h3>
               <div className="space-y-8 relative z-10">
                 <div className="flex items-start space-x-6">
@@ -159,16 +164,6 @@ export default function Contact() {
                     <p className="text-stone-300 font-light">+91 93454 45898</p>
                   </div>
                 </div>
-                
-                {/* Social Links */}
-                <div className="pt-6 flex space-x-6 border-t border-white/10">
-                  <a href="https://www.instagram.com/astra_.interior/" target="_blank" rel="noreferrer" className="text-stone-400 hover:text-[#A68A64] transition-colors">
-                    <Instagram className="w-6 h-6" />
-                  </a>
-                  <a href="https://www.facebook.com/profile.php?id=61562835308067" target="_blank" rel="noreferrer" className="text-stone-400 hover:text-[#A68A64] transition-colors">
-                    <Facebook className="w-6 h-6" />
-                  </a>
-                </div>
               </div>
             </div>
 
@@ -186,7 +181,6 @@ export default function Contact() {
                   <span>Saturday</span>
                   <span className="text-[#2C1E14]">10:00 — 16:00</span>
                 </div>
-                <p className="text-[10px] text-stone-400 italic pt-4">Site visits by prior appointment only.</p>
               </div>
             </div>
           </div>

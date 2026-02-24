@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'; // Import for redirection
 import { ArrowUpRight, Sofa, Lightbulb, Home, Hammer } from 'lucide-react';
 
 const services = [
@@ -32,12 +33,19 @@ const services = [
 ];
 
 export default function Services() {
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
+
   return (
     <section
       id="services"
       className="relative py-32 bg-[#FAF9F6] overflow-hidden"
     >
-      {/* --- SVG VECTOR BACKGROUND (Wood Grain / Topography) --- */}
+      {/* --- SVG VECTOR BACKGROUND --- */}
       <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -77,9 +85,9 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group flex flex-col bg-white border border-stone-100 hover:shadow-[0_20px_50px_rgba(74,55,40,0.12)] transition-all duration-500"
+              onClick={() => navigate('/services')} // Redirect to service page
+              className="group flex flex-col bg-white border border-stone-100 hover:shadow-[0_20px_50px_rgba(74,55,40,0.12)] transition-all duration-500 cursor-pointer"
             >
-              {/* Image with Brown Overlay */}
               <div className="relative w-full aspect-[3/4] overflow-hidden">
                 <img
                   src={service.image}
@@ -87,17 +95,13 @@ export default function Services() {
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2c1e14]/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                
-                {/* Floating Index Number */}
                 <span className="absolute top-6 left-6 text-white/50 font-serif text-lg">0{index + 1}</span>
               </div>
 
-              {/* Card Content */}
               <div className="p-8 flex flex-col flex-grow">
                 <h3 className="text-2xl font-serif text-[#2c1e14] mb-4 group-hover:text-[#a68a64] transition-colors">
                   {service.title}
                 </h3>
-                
                 <p className="text-stone-500 text-sm leading-relaxed mb-8 font-sans font-light">
                   {service.description}
                 </p>
@@ -116,17 +120,19 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Bottom Banner with Solid Brown Gradient */}
+        {/* Bottom Banner with WhatsApp Redirect */}
         <div className="mt-24 relative overflow-hidden bg-gradient-to-r from-[#2c1e14] to-[#4a3728] p-12 md:p-20 text-center flex flex-col items-center">
           <div className="absolute inset-0 opacity-10">
-             {/* Re-using pattern in the banner */}
              <svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#grain)" /></svg>
           </div>
           <h3 className="relative z-10 text-3xl md:text-5xl font-serif text-[#f2e9e4] mb-8">
             Ready to <span className="italic text-[#a68a64]">Astra-fy</span> your home?
           </h3>
-          <button className="relative z-10 px-12 py-5 bg-[#a68a64] text-white uppercase tracking-[0.2em] text-xs font-bold hover:bg-[#8e7350] transition-colors shadow-xl">
-            Schedule a Private Viewing
+          <button 
+            onClick={handleWhatsAppRedirect}
+            className="relative z-10 px-12 py-5 bg-[#a68a64] text-white uppercase tracking-[0.2em] text-xs font-bold hover:bg-[#8e7350] transition-colors shadow-xl active:scale-95"
+          >
+            Schedule via WhatsApp
           </button>
         </div>
       </div>

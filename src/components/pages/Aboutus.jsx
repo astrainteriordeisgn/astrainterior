@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
 import Tilt from "react-parallax-tilt";
 import Lenis from "@studio-freight/lenis";
-import { Ruler, Sparkles, Hammer, Award, Compass, PenTool, ClipboardCheck, Key } from "lucide-react";
-
-// Team images (Paths remain the same)
-import Person1Img from '../../assests/team/person1.webp';
-import Person2Img from '../../assests/team/person1.webp';
-import Person3Img from '../../assests/team/person1.webp';
-import Person4Img from '../../assests/team/person1.webp';
-import Person5Img from '../../assests/team/person1.webp';
+import { 
+  Ruler, Sparkles, Hammer, Award, Compass, 
+  PenTool, ClipboardCheck, Key,MoveRight 
+} from "lucide-react";
 
 const values = [
   { icon: Ruler, title: "Precision Planning", description: "Every millimeter is calculated to balance structural integrity with aesthetic flow." },
@@ -18,12 +14,11 @@ const values = [
   { icon: Award, title: "Timeless Quality", description: "We design for longevity, ensuring your space matures beautifully over decades." },
 ];
 
-const team = [
-  { name: "Prasanth", role: "Principal Designer", image: Person1Img },
-  { name: "Prasant", role: "Master Craftsman", image: Person2Img },
-  { name: "Prasant", role: "Project Lead", image: Person3Img },
-  { name: "Prasant", role: "Technical Architect", image: Person4Img },
-  { name: "Prasant", role: "Creative Stylist", image: Person5Img },
+const materials = [
+  { name: "Raw Walnut", type: "Woodwork", image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=800" },
+  { name: "Brushed Brass", type: "Accents", image: "https://images.unsplash.com/photo-1558603668-6570496b66f8?auto=format&fit=crop&q=80&w=800" },
+  { name: "Italian Marble", type: "Surfacing", image: "https://images.pexels.com/photos/3107165/pexels-photo-3107165.jpeg" },
+  { name: "Crushed Velvet", type: "Upholstery", image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800" },
 ];
 
 const processSteps = [
@@ -35,6 +30,8 @@ const processSteps = [
 
 export default function Aboutus() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
 
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
@@ -49,10 +46,12 @@ export default function Aboutus() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
+
   return (
     <div className="bg-[#FAF9F6]">
-    
-
       <section id="about" className="relative py-32 overflow-hidden font-sans">
         
         {/* --- ARCHITECTURAL SVG BACKGROUND --- */}
@@ -68,7 +67,6 @@ export default function Aboutus() {
           </svg>
         </div>
 
-        {/* Floating Bronze Glow */}
         <div className="absolute rounded-full w-[500px] h-[500px] bg-[#A68A64]/10 blur-[120px] pointer-events-none transition-transform duration-1000" 
              style={{ transform: `translate(${cursorPos.x * 0.01}px, ${cursorPos.y * 0.01}px)` }} />
 
@@ -109,6 +107,40 @@ export default function Aboutus() {
             ))}
           </div>
 
+          {/* NEW: Material Showcase Section (Replaces Team) */}
+          <div className="mb-40">
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.4em] text-[#A68A64] font-bold mb-6 block">The Astra Palette</span>
+                <h3 className="text-4xl md:text-6xl font-serif text-[#2C1E14] mb-8 leading-tight">
+                  Materials that <br /> <span className="italic">speak volumes.</span>
+                </h3>
+                <p className="text-stone-500 font-light leading-relaxed mb-10 max-w-md">
+                  We believe the soul of a home is found in its textures. From the cold touch of premium marble to the warmth of hand-treated walnut, we curate sensory experiences.
+                </p>
+                <button 
+                  onClick={() => navigate('/services')}
+                  className="flex items-center space-x-4 text-[#2C1E14] group font-bold tracking-widest text-xs uppercase"
+                >
+                  <span>Explore Our Services</span>
+                  <MoveRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {materials.map((mat, i) => (
+                  <div key={i} className={`relative overflow-hidden aspect-square group ${i % 2 !== 0 ? 'mt-8' : ''}`}>
+                    <img src={mat.image} alt={mat.name} className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-[#2C1E14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                      <p className="text-[#A68A64] text-[9px] uppercase tracking-widest font-bold mb-1">{mat.type}</p>
+                      <p className="text-white font-serif text-lg">{mat.name}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Staggered Vertical Process Roadmap */}
           <div className="mb-40">
             <div className="text-center mb-20">
@@ -122,7 +154,7 @@ export default function Aboutus() {
                     <div className="w-full md:w-[42%] group">
                       <div className="bg-white p-10 border border-stone-100 shadow-sm transition-all duration-700 group-hover:shadow-2xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                           <step.icon className="w-24 h-24 text-[#2C1E14]" />
+                            <step.icon className="w-24 h-24 text-[#2C1E14]" />
                         </div>
                         <span className="text-[10px] uppercase tracking-[0.4em] text-[#A68A64] font-bold mb-4 block">Phase 0{idx + 1}</span>
                         <h4 className="text-3xl font-serif text-[#2C1E14] mb-4 tracking-tight">{step.title}</h4>
@@ -137,26 +169,8 @@ export default function Aboutus() {
             </div>
           </div>
 
-          {/* Leadership Team */}
-          <div className="mb-32">
-            <h3 className="text-4xl md:text-6xl font-serif text-center text-[#2C1E14] mb-20">The <span className="italic text-[#A68A64]">Visionaries</span></h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-              {team.map((member, index) => (
-                <div key={index} className="group text-center">
-                  <div className="relative mb-6 overflow-hidden aspect-[4/5] bg-stone-200">
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#2C1E14]/40 to-transparent"></div>
-                  </div>
-                  <h4 className="text-2xl font-serif text-[#2C1E14] mb-1">{member.name}</h4>
-                  <p className="text-[#A68A64] text-[10px] uppercase tracking-widest font-bold">{member.role}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Call to Action: Large Gradient Banner */}
+          {/* Call to Action */}
           <div className="relative overflow-hidden bg-gradient-to-br from-[#2C1E14] to-[#4A3728] p-16 md:p-24 text-center">
-             {/* Pattern overlay for CTA */}
             <div className="absolute inset-0 opacity-10"><svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#grid)" /></svg></div>
             
             <h3 className="relative z-10 text-4xl md:text-6xl font-serif text-white mb-8 leading-tight">
@@ -166,17 +180,15 @@ export default function Aboutus() {
               With 40+ projects completed, we bring the wealth of experience and the precision of craftsmanship to your doorstep.
             </p>
             <button 
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} 
-              className="relative z-10 px-12 py-5 bg-[#A68A64] text-white uppercase tracking-[0.3em] text-xs font-bold hover:bg-white hover:text-[#2C1E14] transition-all duration-500 shadow-2xl"
+              onClick={handleWhatsAppRedirect} 
+              className="relative z-10 px-12 py-5 bg-[#A68A64] text-white uppercase tracking-[0.3em] text-xs font-bold hover:bg-white hover:text-[#2C1E14] transition-all duration-500 shadow-2xl active:scale-95"
             >
-              Start a Conversation
+              Start a Conversation via WhatsApp
             </button>
           </div>
 
         </div>
       </section>
-
-     
     </div>
   );
 }

@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import {
-  ShoppingBag,
-  ArrowRight,
-  Mail,
-  Phone,
-  X,
-} from "lucide-react";
+import { Mail, Phone, X, Menu, ArrowRight } from "lucide-react";
 import logo from "../assests/BUS (38).png";
 
 export default function Navigation() {
@@ -14,9 +8,22 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    
+    // NEW: Handle screen resizing to close menu when moving to desktop view
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) { // 1024px is the 'lg' breakpoint in Tailwind
+        setIsOpen(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -31,243 +38,133 @@ export default function Navigation() {
     { name: "Contact", path: "/contactus" },
   ];
 
+  const activeStyle = "text-[#A68A64] after:w-full";
+  const idleStyle = "text-[#2C1E14] hover:text-[#A68A64] after:w-0 hover:after:w-full";
+
   return (
-    <header className="fixed top-0 left-0 w-full z-[100] transition-all duration-700 pointer-events-none">
-      
-      {/* FLOATING HEADER BAR */}
-      <div
-        className={`max-w-[1600px] mx-auto px-4 md:px-12 flex justify-between items-center transition-all duration-700 pointer-events-auto ${
+    <>
+      {/* --- HEADER --- */}
+      <header
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
           scrolled
-            ? "mt-4 md:mt-6 px-6 md:px-10 py-3 bg-[#FAF9F6]/80 backdrop-blur-xl border border-stone-200 rounded-full shadow-lg max-w-[95%] md:max-w-[800px]"
-            : "mt-0 py-8 w-full"
+            ? "bg-white/90 backdrop-blur-lg py-3 shadow-sm border-b border-stone-100"
+            : "bg-transparent py-6"
         }`}
       >
-        {/* LOGO */}
-        <Link
-          to="/"
-          className="flex items-center space-x-3 z-[110]"
-          onClick={() => setIsOpen(false)}
-        >
-          <img
-            src={logo}
-            alt="Astra"
-            className={`object-contain transition-all duration-500 ${
-              scrolled ? "h-8 w-8" : "h-12 w-12"
-            }`}
-          />
-          <span
-            className={`font-serif tracking-tighter font-bold transition-all duration-500 ${
-              scrolled ? "text-base" : "text-2xl"
-            } text-[#2C1E14]`}
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between">
+          
+          {/* LOGO SECTION */}
+          <Link
+            to="/"
+            onClick={() => setIsOpen(false)}
+            className="group flex items-center space-x-3"
           >
-            ASTRA{" "}
-            <span
-              className={`italic font-light text-[#A68A64] ${
-                scrolled ? "hidden md:inline" : "inline"
-              }`}
-            >
-              INTERIOR
-            </span>
-          </span>
-        </Link>
-
-        {/* DESKTOP NAV */}
-        <div
-          className={`hidden md:flex items-center space-x-8 transition-all duration-500 ${
-            scrolled
-              ? "opacity-0 scale-90 pointer-events-none"
-              : "opacity-100"
-          }`}
-        >
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                `text-[10px] uppercase tracking-[0.4em] font-bold transition-colors ${
-                  isActive
-                    ? "text-[#A68A64]"
-                    : "text-[#2C1E14] hover:text-[#A68A64]"
-                }`
-              }
-            >
-              {link.name}
-            </NavLink>
-          ))}
-        </div>
-
-        {/* ACTIONS */}
-        <div className="flex items-center space-x-4">
-          <button
-            className={`relative text-[#2C1E14] transition-all ${
-              scrolled ? "p-1" : "p-2"
-            }`}
-          >
-            <ShoppingBag className={scrolled ? "w-4 h-4" : "w-6 h-6"} />
-            <span className="absolute top-0 right-0 bg-[#A68A64] text-white text-[7px] rounded-full w-3.5 h-3.5 flex items-center justify-center">
-              0
-            </span>
-          </button>
-
-          {/* MENU TOGGLE */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={`flex items-center space-x-3 group px-4 py-2 transition-all duration-500 ${
-              scrolled
-                ? "bg-[#2C1E14] text-white rounded-full"
-                : "text-[#2C1E14]"
-            }`}
-          >
-            <span className="text-[10px] uppercase tracking-widest font-bold hidden md:inline">
-              {isOpen ? "Close" : "Menu"}
-            </span>
-            <div className="relative w-6 h-5 flex flex-col justify-between items-end">
-              <span
-                className={`h-[1.5px] bg-current transition-all duration-500 ${
-                  isOpen ? "w-6 rotate-45 translate-y-[9px]" : "w-6"
-                }`}
-              />
-              <span
-                className={`h-[1.5px] bg-current transition-all duration-500 ${
-                  isOpen ? "opacity-0" : "w-4"
-                }`}
-              />
-              <span
-                className={`h-[1.5px] bg-current transition-all duration-500 ${
-                  isOpen
-                    ? "w-6 -rotate-45 -translate-y-[9px]"
-                    : "w-6"
-                }`}
-              />
+            <div className="relative overflow-hidden rounded-full transition-transform duration-500 group-hover:rotate-12">
+              <img src={logo} alt="Astra Logo" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
             </div>
+            <div className="flex flex-col">
+              <span className="font-serif text-xl md:text-2xl tracking-[0.2em] text-[#2C1E14] leading-none">
+                ASTRA
+              </span>
+              <span className="text-[10px] tracking-[0.4em] uppercase text-stone-500 mt-1">INTERIOR</span>
+            </div>
+          </Link>
+
+          {/* DESKTOP NAVIGATION */}
+          <nav className="hidden lg:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) => `
+                  relative py-2 text-xs uppercase tracking-[0.15em] font-medium transition-all duration-300
+                  after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:bg-[#A68A64] after:transition-all after:duration-500
+                  ${isActive ? activeStyle : idleStyle}
+                `}
+              >
+                {link.name}
+              </NavLink>
+            ))}
+            
+            <Link 
+              to="/contactus" 
+              className="ml-4 px-6 py-3 bg-[#2C1E14] text-white text-[11px] uppercase tracking-widest hover:bg-[#A68A64] transition-colors duration-300"
+            >
+              Inquire
+            </Link>
+          </nav>
+
+          {/* MOBILE TOGGLE */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="lg:hidden flex items-center space-x-2 p-2 group"
+            aria-label="Open Menu"
+          >
+            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#2C1E14]">Menu</span>
+            <Menu className="w-5 h-5 text-[#2C1E14] group-hover:text-[#A68A64] transition-colors" />
           </button>
         </div>
-      </div>
+      </header>
 
-    {/* FULLSCREEN MENU */}
-<div
-  className={`fixed inset-0 bg-[#FAF9F6] transition-all duration-700 ease-[cubic-bezier(0.85,0,0.15,1)] pointer-events-auto ${
-    isOpen
-      ? "translate-y-0 md:translate-x-0"
-      : "translate-y-full md:translate-x-full"
-  }`}
->
-  {/* CLOSE / CANCEL */}
-  <div className="absolute top-6 right-6 z-[200] flex items-center space-x-4">
-    {/* Cancel text */}
-    <button
-      onClick={() => setIsOpen(false)}
-      className="text-[10px] uppercase tracking-widest font-bold text-white hover:text-[#A68A64] transition-colors"
-    >
-      Cancel
-    </button>
+      {/* --- MOBILE SIDEBAR OVERLAY --- */}
+      <div 
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-500 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)} // This closes the nav when clicking the background
+      />
 
-    {/* Divider */}
-    <span className="h-4 w-px bg-stone-300" />
+      {/* --- MOBILE SIDEBAR PANEL --- */}
+      <aside
+        className={`fixed top-0 right-0 w-[85%] max-w-[400px] h-full bg-stone-50 z-[70] shadow-2xl transition-transform duration-500 ease-out flex flex-col ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-between items-center px-8 py-8 border-b border-stone-200">
+          <span className="font-serif text-sm tracking-widest uppercase">Navigation</span>
+          <button onClick={() => setIsOpen(false)} className="p-2 hover:rotate-90 transition-transform duration-300">
+            <X className="w-6 h-6 text-[#2C1E14]" />
+          </button>
+        </div>
 
-    {/* Close icon */}
-    <button
-      onClick={() => setIsOpen(false)}
-      className="flex items-center justify-center text-[#2C1E14] hover:text-[#A68A64] transition-colors group"
-    >
-      <X className="w-6 h-6 transition-transform group-hover:rotate-90" />
-    </button>
-  </div>
-
-  {/* WATERMARK (DESKTOP ONLY) */}
-  <div className="hidden md:block absolute top-1/2 left-0 -translate-y-1/2 opacity-[0.02] pointer-events-none -rotate-90 origin-left">
-    <h2 className="text-[25vw] font-serif text-[#2C1E14] tracking-tighter">
-      COLLECTION
-    </h2>
-  </div>
-
-  <div className="relative h-full flex flex-col md:flex-row">
-    {/* LEFT: NAV */}
-    <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 md:px-24 py-24 md:py-32 space-y-12">
-      <p className="text-[10px] uppercase tracking-[0.5em] text-stone-400 font-bold border-b border-stone-200 pb-4 max-w-xs">
-        Astra Studio Navigation
-      </p>
-
-      <div className="flex flex-col space-y-6 md:space-y-10">
-        {navLinks
-          .concat([{ name: "Inquire", path: "/contact" }])
-          .map((link, index) => (
+        <nav className="flex-grow flex flex-col justify-center px-12 space-y-8">
+          {navLinks.map((link, idx) => (
             <NavLink
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className={({ isActive }) =>
-                `text-3xl sm:text-4xl md:text-8xl font-serif tracking-tighter flex items-center group transition-all duration-500 ${
-                  isActive
-                    ? "text-[#A68A64] italic"
-                    : "text-[#2C1E14] hover:pl-8"
-                }`
-              }
-              style={{
-                transitionDelay: isOpen ? `${index * 100}ms` : "0ms",
-              }}
+              className={({ isActive }) => `
+                group flex items-center justify-between text-2xl font-serif transition-all duration-300
+                ${isActive ? "text-[#A68A64] pl-4" : "text-[#2C1E14] hover:text-[#A68A64] hover:pl-4"}
+              `}
+              style={{ transitionDelay: `${idx * 50}ms` }}
             >
-              {link.name}
-              <ArrowRight className="ml-6 w-6 h-6 md:w-12 md:h-12 opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#A68A64]" />
+              <span>{link.name}</span>
+              <ArrowRight className={`w-5 h-5 opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0`} />
             </NavLink>
           ))}
-      </div>
+        </nav>
 
-            {/* MOBILE CONTACT */}
-            <div className="md:hidden pt-16 space-y-6 border-t border-stone-200">
-              <a
-                href="mailto:astrainterior83@gmail.com"
-                className="flex items-center space-x-3 text-lg text-[#2C1E14]"
-              >
-                <Mail className="w-5 h-5" />
-                <span>astrainterior83@gmail.com</span>
-              </a>
-              <a
-                href="tel:+919345445898"
-                className="flex items-center space-x-3 text-lg text-[#2C1E14]"
-              >
-                <Phone className="w-5 h-5" />
-                <span>+91 93454 45898</span>
-              </a>
-            </div>
+        <div className="p-12 bg-white border-t border-stone-100 space-y-6">
+          <div className="space-y-4">
+            <a href="mailto:astrainterior83@gmail.com" className="flex items-center space-x-3 text-sm text-stone-600 hover:text-[#A68A64] transition-colors">
+              <Mail className="w-4 h-4" />
+              <span>astrainterior83@gmail.com</span>
+            </a>
+            <a href="tel:+919345445898" className="flex items-center space-x-3 text-sm text-stone-600 hover:text-[#A68A64] transition-colors">
+              <Phone className="w-4 h-4" />
+              <span>+91 93454 45898</span>
+            </a>
           </div>
-
-          {/* RIGHT: DESKTOP CONTACT */}
-          <div
-            className={`hidden md:flex w-[400px] bg-[#2C1E14] p-20 flex-col justify-between transition-transform duration-1000 delay-300 ${
-              isOpen ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
-            <div className="space-y-12 text-white">
-              <div className="space-y-4">
-                <p className="text-[#A68A64] text-[10px] uppercase tracking-[0.4em] font-bold">
-                  Contact
-                </p>
-                <a
-                  href="mailto:astrainterior83@gmail.com"
-                  className="flex items-center space-x-3 text-lg font-light hover:text-[#A68A64]"
-                >
-                  <Mail className="w-5 h-5" />
-                  <span>astrainterior83@gmail.com</span>
-                </a>
-                <a
-                  href="tel:+919345445898"
-                  className="flex items-center space-x-3 text-lg font-light hover:text-[#A68A64]"
-                >
-                  <Phone className="w-5 h-5" />
-                  <span>+91 93454 45898</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="text-stone-500 text-[9px] uppercase tracking-widest leading-relaxed">
-              © 2026 Astra Interior Studio
-              <br />
-              Race Course, Coimbatore
-            </div>
+          <div className="pt-4 flex space-x-6">
+            {['Instagram'].map(social => (
+              <span key={social} className="text-[10px] uppercase tracking-tighter text-stone-400 cursor-pointer hover:text-[#2C1E14]">
+                {social}
+              </span>
+            ))}
           </div>
         </div>
-      </div>
-    </header>
+      </aside>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Added for navigation
 import { ArrowUpRight, Minus, MoveRight } from 'lucide-react';
 import Lenis from "@studio-freight/lenis";
 
@@ -20,12 +21,19 @@ const projects = [
 ];
 
 export default function Work() {
+  const navigate = useNavigate();
+  const whatsappNumber = "919345445898";
+
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1 });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
     return () => lenis.destroy();
   }, []);
+
+  const handleWhatsAppRedirect = () => {
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
 
   return (
     <section id="work" className="relative py-32 bg-[#FCFBFA] overflow-hidden">
@@ -65,7 +73,8 @@ export default function Work() {
           {projects.map((item, index) => (
             <div 
               key={index} 
-              className={`group flex flex-col ${index % 2 !== 0 ? 'lg:translate-y-24' : ''} transition-all duration-700`}
+              onClick={() => navigate('/services')} // Redirects card click to Services page
+              className={`group flex flex-col cursor-pointer ${index % 2 !== 0 ? 'lg:translate-y-24' : ''} transition-all duration-700`}
             >
               {/* Image Container */}
               <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 shadow-xl">
@@ -100,15 +109,18 @@ export default function Work() {
           ))}
         </div>
 
-        {/* Bottom CTA Section */}
+        {/* Bottom CTA Section with WhatsApp Redirect */}
         <div className="mt-64 text-center">
-          <button className="group relative px-16 py-6 border border-[#2C1E14] text-[#2C1E14] overflow-hidden transition-all duration-500">
+          <button 
+            onClick={handleWhatsAppRedirect}
+            className="group relative px-16 py-6 border border-[#2C1E14] text-[#2C1E14] overflow-hidden transition-all duration-500 active:scale-95"
+          >
             <span className="relative z-10 flex items-center uppercase tracking-widest text-xs font-bold">
               View All Masterpieces <MoveRight className="ml-3 w-4 h-4 group-hover:translate-x-2 transition-transform" />
             </span>
             <div className="absolute inset-0 bg-[#2C1E14] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
             <div className="absolute inset-0 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
-               <span className="uppercase tracking-widest text-xs font-bold">Begin Your Journey</span>
+               <span className="uppercase tracking-widest text-xs font-bold font-sans">Chat on WhatsApp</span>
             </div>
           </button>
         </div>
