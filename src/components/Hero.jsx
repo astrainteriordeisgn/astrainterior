@@ -60,7 +60,7 @@ export default function Hero() {
               className="group flex items-center justify-center px-10 py-4 bg-stone-900 text-white rounded-none transition-all duration-500 hover:bg-stone-700 active:scale-95"
             >
               <ShoppingBag className="mr-2 w-4 h-4" />
-              <span className="tracking-widest text-[11px] uppercase font-medium">Work Collection</span>
+              <span className="tracking-widest text-[11px] uppercase font-medium">Works</span>
             </button>
 
             {/* Redirects to /contact */}
