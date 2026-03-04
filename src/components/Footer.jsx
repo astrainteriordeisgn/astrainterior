@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'; // Using Link for smoother navigation
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, ArrowRight, Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
-import Logo from '../assests/BUS (38).png'; 
+import Logo from '../assests/logo.webp'; 
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -22,19 +22,24 @@ export default function Footer() {
         </svg>
       </div>
 
-      {/* Reduced py-24 to py-16 to shrink overall height */}
       <div className="relative z-10 max-w-[1600px] mx-auto px-6 lg:px-16 py-16">
-        {/* Reduced gap-16 to gap-8 and mb-20 to mb-12 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           
           {/* Brand Identity & Socials */}
-          <div className="space-y-6"> {/* Reduced space-y-8 to 6 */}
-            <div className="mb-4"> {/* Reduced mb-6 to 4 */}
+          <div className="space-y-6">
+            <div className="mb-4">
               <Link to="/">
-                <img src={Logo} alt="Astra Interior" className="h-16 w-auto brightness-0 invert" />
+                {/* FIXED: Removed brightness-0 invert. 
+                    Added mix-blend-mode to remove dark background artifacts naturally. */}
+                <img 
+                  src={Logo} 
+                  alt="Astra Interior" 
+                  className="h-16 w-auto object-contain mix-blend-plus-lighter" 
+                  loading="lazy"
+                />
               </Link>
             </div>
-            <p className="text-stone-400 leading-relaxed font-light italic text-base"> {/* Adjusted text-lg to base */}
+            <p className="text-stone-400 leading-relaxed font-light italic text-base">
               "Crafting timeless sanctuaries where architectural precision meets the soul of modern living."
             </p>
             <div className="flex space-x-4">
@@ -68,7 +73,7 @@ export default function Footer() {
           {/* Quick Contact Info */}
           <div className="space-y-6">
             <h4 className="text-[#A68A64] font-serif font-bold text-lg tracking-tight">Contact Studio</h4>
-            <div className="space-y-4"> {/* Reduced space-y-6 to 4 */}
+            <div className="space-y-4">
               <a href="tel:+919345445898" className="flex items-center space-x-4 text-stone-400 hover:text-white transition-colors group">
                 <Phone className="w-4 h-4 text-[#A68A64]" />
                 <span className="text-sm font-light">+91 93454 45898</span>
@@ -87,7 +92,7 @@ export default function Footer() {
           {/* Studio Navigation */}
           <div>
             <h4 className="text-[#A68A64] font-serif font-bold mb-6 text-lg tracking-tight">The Studio</h4>
-            <ul className="space-y-3"> {/* Reduced space-y-4 to 3 */}
+            <ul className="space-y-3">
               {[
                 { name: 'About Astra', path: '/about' },
                 { name: 'Our Portfolio', path: '/port' },
@@ -105,8 +110,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter / Exclusive Access */}
-          <div className="bg-[#36271C] p-6 border border-stone-800 self-start"> {/* Reduced p-8 to 6 */}
+          {/* Exclusive Access Section */}
+          <div className="bg-[#36271C] p-6 border border-stone-800 self-start">
             <h4 className="text-white font-serif font-bold mb-3 text-lg">Direct Inquiry</h4>
             <p className="text-stone-400 mb-6 text-sm font-light leading-relaxed">
               Skip the email. Chat directly with our design lead for immediate project consultations.
@@ -123,7 +128,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-stone-800 pt-8"> {/* Reduced pt-12 to 8 */}
+        <div className="border-t border-stone-800 pt-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex flex-col items-center lg:items-start space-y-1">
               <p className="text-stone-500 text-[10px] uppercase tracking-[0.4em] font-bold">
@@ -134,7 +139,7 @@ export default function Footer() {
               </p>
             </div>
             
-            <div className="flex space-x-8"> {/* Reduced space-x-10 to 8 */}
+            <div className="flex space-x-8">
               {['Privacy', 'Terms', 'Shipping'].map((link) => (
                 <Link key={link} to="/contactus" className="text-stone-500 hover:text-[#A68A64] text-[10px] uppercase tracking-widest transition-colors font-bold">
                   {link}

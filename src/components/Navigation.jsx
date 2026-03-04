@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Mail, Phone, X, Menu, ArrowRight } from "lucide-react";
-import logo from "../assests/BUS (38).png";
+import logo from "../assests/logo.webp";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);

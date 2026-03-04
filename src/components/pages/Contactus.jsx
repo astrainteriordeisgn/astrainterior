@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send, Clock, Home } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -14,10 +14,7 @@ export default function Contact() {
     offset: ["start end", "end start"]
   });
 
-  // Animates the 'draw' from 0 to 1 based on scroll
   const pathLength = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-  
-  // Controls the position of the '.car' along the path
   const offsetDistance = useTransform(scrollYProgress, [0.1, 0.6], ["0%", "100%"]);
 
   const onSubmit = async (event) => {
@@ -33,14 +30,14 @@ export default function Contact() {
       });
       const data = await response.json();
       if (data.success) {
-        setResult("Message Sent Successfully!");
+        setResult("Inquiry Sent Successfully!");
         event.target.reset();
-        setTimeout(() => { navigate('/thank-you'); }, 500);
+        setTimeout(() => { navigate('/thank-you'); }, 1000);
       } else {
-        setResult("Something went wrong. Please try again.");
+        setResult(data.message || "Submission failed.");
       }
     } catch (error) {
-      setResult("Submission error. Check your connection.");
+      setResult("Check your connection and try again.");
     }
   };
 
@@ -48,53 +45,47 @@ export default function Contact() {
     <section 
       ref={containerRef}
       id="contact" 
-      className="relative py-32 bg-[#FAF9F6] overflow-hidden font-sans"
+      className="relative py-24 md:py-32 bg-[#FAF9F6] overflow-hidden font-sans"
     >
       {/* --- DYNAMIC SVG BACKGROUND --- */}
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" aria-hidden="true">
         <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-          {/* Static Circuit Path (The blueprint) */}
           <path
-            id="circuit"
             d="M0,500 Q250,100 500,500 T1000,500"
             fill="none"
             stroke="#A68A64"
-            strokeWidth="2"
+            strokeWidth="1"
             strokeDasharray="10 10"
           />
-          
-          {/* DRAW ANIMATION (animate(createDrawable('.circuit'), { draw: '0 1' })) */}
           <motion.path
             d="M0,500 Q250,100 500,500 T1000,500"
             fill="none"
             stroke="#2C1E14"
-            strokeWidth="3"
-            style={{ pathLength }}
+            strokeWidth="2"
+            style={{ pathLength, transformGpu: true }}
           />
-
-          {/* MOTION PATH ANIMATION (animate('.car', { ...createMotionPath('.circuit') })) */}
           <motion.circle
-            r="8"
+            r="6"
             fill="#A68A64"
             style={{
               offsetPath: "path('M0,500 Q250,100 500,500 T1000,500')",
-              offsetDistance
+              offsetDistance,
+              transformGpu: true
             }}
           />
         </svg>
       </div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
-        {/* Header */}
-        <div className="text-center mb-24">
+        {/* Header - Corrected Hierarchy */}
+        <div className="text-center mb-16 md:mb-24">
           <div className="flex items-center justify-center space-x-4 mb-6">
             <div className="w-12 h-[1px] bg-[#A68A64]"></div>
-            <span className="text-[#A68A64] uppercase tracking-[0.5em] text-xs font-bold">Inquiry</span>
+            <span className="text-[#A68A64] uppercase tracking-[0.5em] text-[10px] font-bold">Inquiry</span>
             <div className="w-12 h-[1px] bg-[#A68A64]"></div>
           </div>
-          <h2 className="text-5xl md:text-8xl font-serif text-[#2C1E14] leading-none tracking-tighter mb-8">
+          <h1 className="text-5xl md:text-8xl font-serif text-[#2C1E14] leading-none tracking-tighter mb-8">
             Begin Your <br />
-            {/* SHAPE MORPHING CONCEPT on text via gradient */}
             <motion.span 
               animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
               transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
@@ -102,29 +93,36 @@ export default function Contact() {
             >
               Sanctuary
             </motion.span>
-          </h2>
+          </h1>
+          <p className="text-stone-500 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed italic">
+            "We are currently accepting bespoke projects for the 2026 season."
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Form Side */}
-          <div className="lg:col-span-7 bg-white p-10 md:p-16 shadow-[30px_30px_60px_-15px_rgba(44,30,20,0.08)] border border-stone-50">
+          <div className="lg:col-span-7 bg-white p-8 md:p-16 shadow-[30px_30px_60px_-15px_rgba(44,30,20,0.08)] border border-stone-50">
             <form onSubmit={onSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Full Name</label>
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="user_name" className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Full Name</label>
                   <input
+                    id="user_name"
                     type="text"
                     name="name"
+                    autoComplete="name"
                     required
                     className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors placeholder:text-stone-300"
                     placeholder="E.g. Alexander Thorne"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Email Address</label>
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="user_email" className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Email Address</label>
                   <input
+                    id="user_email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     required
                     className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors placeholder:text-stone-300"
                     placeholder="alexander@prestige.com"
@@ -132,11 +130,12 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Type</label>
+              <div className="flex flex-col space-y-2">
+                <label htmlFor="project_type" className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Type</label>
                 <select
+                  id="project_type"
                   name="project_type"
-                  className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors"
+                  className="w-full pb-4 bg-transparent border-b border-stone-200 text-[#2C1E14] focus:outline-none focus:border-[#A68A64] transition-colors cursor-pointer"
                 >
                   <option value="Residential Renovation">Residential Renovation</option>
                   <option value="Commercial Space">Commercial Space</option>
@@ -145,9 +144,10 @@ export default function Contact() {
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Vision</label>
+              <div className="flex flex-col space-y-2">
+                <label htmlFor="user_vision" className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Project Vision</label>
                 <textarea
+                  id="user_vision"
                   name="message"
                   required
                   rows={4}
@@ -156,63 +156,67 @@ export default function Contact() {
                 />
               </div>
 
-              <button type="submit" className="group relative w-full py-6 bg-[#2C1E14] text-white flex items-center justify-center space-x-4 overflow-hidden transition-all duration-500">
-                <span className="relative z-10 uppercase tracking-[0.4em] text-xs font-bold">Send Private Inquiry</span>
+              <button 
+                type="submit" 
+                aria-label="Submit private inquiry"
+                className="group relative w-full py-6 bg-[#2C1E14] text-white flex items-center justify-center space-x-4 overflow-hidden transition-all duration-500 transform-gpu"
+              >
+                <span className="relative z-10 uppercase tracking-[0.4em] text-[10px] font-bold">Send Private Inquiry</span>
                 <Send className="relative z-10 w-4 h-4 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
                 <div className="absolute inset-0 bg-[#A68A64] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
               </button>
 
               {result && (
-                <p className="text-center text-xs uppercase tracking-[0.2em] font-bold text-[#A68A64] animate-pulse">
+                <div role="status" className="text-center text-[10px] uppercase tracking-[0.2em] font-bold text-[#A68A64] animate-pulse">
                   {result}
-                </p>
+                </div>
               )}
             </form>
           </div>
 
           {/* Info Side */}
           <div className="lg:col-span-5 space-y-12">
-            <div className="bg-[#2C1E14] text-white p-12 shadow-2xl relative overflow-hidden">
-              <Home className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5 opacity-10" />
-              <h3 className="text-3xl font-serif mb-10 relative z-10">The Design Atelier</h3>
-              <div className="space-y-8 relative z-10">
+            <div className="bg-[#2C1E14] text-white p-10 md:p-12 shadow-2xl relative overflow-hidden transform-gpu">
+              <Home className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5 opacity-10" aria-hidden="true" />
+              <h2 className="text-3xl font-serif mb-10 relative z-10">The Design Atelier</h2>
+              <address className="space-y-8 relative z-10 not-italic">
                 <div className="flex items-start space-x-6">
-                  <MapPin className="w-6 h-6 text-[#A68A64] mt-1" />
+                  <MapPin className="w-6 h-6 text-[#A68A64] mt-1 shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Location</p>
-                    <p className="text-stone-300 font-light">Rs puram, Coimbatore<br />Tamil Nadu, India</p>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Location</p>
+                    <p className="text-stone-300 font-light text-sm">Rs puram, Coimbatore<br />Tamil Nadu, India</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-6">
-                  <Mail className="w-6 h-6 text-[#A68A64] mt-1" />
+                  <Mail className="w-6 h-6 text-[#A68A64] mt-1 shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Email</p>
-                    <p className="text-stone-300 font-light">astrainterior83@gmail.com</p>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Email</p>
+                    <a href="mailto:astrainterior83@gmail.com" className="text-stone-300 font-light text-sm hover:text-white transition-colors">astrainterior83@gmail.com</a>
                   </div>
                 </div>
                 <div className="flex items-start space-x-6">
-                  <Phone className="w-6 h-6 text-[#A68A64] mt-1" />
+                  <Phone className="w-6 h-6 text-[#A68A64] mt-1 shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Private Line</p>
-                    <p className="text-stone-300 font-light">+91 93454 45898</p>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Private Line</p>
+                    <a href="tel:+919345445898" className="text-stone-300 font-light text-sm hover:text-white transition-colors">+91 93454 45898</a>
                   </div>
                 </div>
-              </div>
+              </address>
             </div>
 
-            <div className="p-12 border border-stone-200 bg-white/50 backdrop-blur-sm">
+            <div className="p-10 md:p-12 border border-stone-200 bg-white/50 backdrop-blur-sm">
               <div className="flex items-center space-x-3 mb-6">
-                <Clock className="w-5 h-5 text-[#A68A64]" />
-                <h4 className="font-serif text-[#2C1E14] text-xl italic">Availability</h4>
+                <Clock className="w-5 h-5 text-[#A68A64]" aria-hidden="true" />
+                <h3 className="font-serif text-[#2C1E14] text-xl italic">Studio Availability</h3>
               </div>
               <div className="space-y-3 text-stone-500 text-sm font-light">
                 <div className="flex justify-between border-b border-stone-100 pb-2">
                   <span>Monday — Friday</span>
-                  <span className="text-[#2C1E14]">09:00 — 18:00</span>
+                  <span className="text-[#2C1E14] font-medium">09:00 — 18:00</span>
                 </div>
                 <div className="flex justify-between border-b border-stone-100 pb-2">
                   <span>Saturday</span>
-                  <span className="text-[#2C1E14]">10:00 — 16:00</span>
+                  <span className="text-[#2C1E14] font-medium">10:00 — 16:00</span>
                 </div>
               </div>
             </div>
