@@ -12,27 +12,22 @@
     
     <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v37/nuFfPreSaL5UMxEzvy6rx92szbbZ.woff2" as="font" type="font/woff2" crossorigin />
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5SXDKTYF3C"></script>
+    <script>
+      window.addEventListener('load', function() {
+        const gtmScript = document.createElement('script');
+        gtmScript.src = "https://www.googletagmanager.com/gtag/js?id=G-5SXDKTYF3C";
+        gtmScript.async = true;
+        document.head.appendChild(gtmScript);
 
-
-   <script>
-  window.addEventListener('load', function() {
-    const gtmScript = document.createElement('script');
-    gtmScript.src = "https://www.googletagmanager.com/gtag/js?id=G-5SXDKTYF3C";
-    gtmScript.async = true;
-    document.head.appendChild(gtmScript);
-
-    gtagScript.onload = () => {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-5SXDKTYF3C');
-    };
-  });
-</script>
-
-
-
+        // FIXED: Using gtmScript variable to match the declaration above
+        gtmScript.onload = () => {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-5SXDKTYF3C', { 'transport_type': 'beacon' });
+        };
+      });
+    </script>
 
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -58,8 +53,6 @@
       }
       #root { min-height: 100dvh; }
       
-      /* FIX: Critical CSS to prevent Forced Reflow */
-      /* This reserves space for your Hero so the layout doesn't "jump" when images load */
       .hero-section {
         min-height: 100vh;
         background-color: var(--brand-brown);
@@ -68,7 +61,6 @@
         justify-content: center;
       }
 
-      /* Instant Brand Shell */
       #initial-load-shell {
         position: fixed; top: 0; left: 0; width: 100%; height: 80px;
         display: flex; align-items: center; justify-content: space-between;
@@ -94,7 +86,6 @@
     <div id="root"></div>
 
     <script>
-      // Optimized cleanup: Only remove the shell when React is ready
       window.addEventListener('load', () => {
         const shell = document.getElementById('initial-load-shell');
         if (shell) {
