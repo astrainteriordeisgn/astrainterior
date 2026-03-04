@@ -1,15 +1,28 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Import the hook
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send, Clock, Home } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Contact() {
   const [result, setResult] = useState("");
-  const navigate = useNavigate(); // 2. Initialize the navigate function
+  const navigate = useNavigate();
+  const containerRef = useRef(null);
+
+  // --- MOTION & SCROLL LOGIC ---
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Animates the 'draw' from 0 to 1 based on scroll
+  const pathLength = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+  
+  // Controls the position of the '.car' along the path
+  const offsetDistance = useTransform(scrollYProgress, [0.1, 0.6], ["0%", "100%"]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     setResult("Sending...");
-    
     const formData = new FormData(event.target);
     formData.append("access_key", "ebb6356a-ccd3-4584-9c7a-98cec10bbc98");
 
@@ -18,21 +31,12 @@ export default function Contact() {
         method: "POST",
         body: formData
       });
-
       const data = await response.json();
-
       if (data.success) {
         setResult("Message Sent Successfully!");
         event.target.reset();
-        
-        // 3. Redirect to the Thank You page
-        // We add a small delay (500ms) so the user sees the success message briefly
-        setTimeout(() => {
-          navigate('/thank-you');
-        }, 500);
-        
+        setTimeout(() => { navigate('/thank-you'); }, 500);
       } else {
-        console.log("Error", data);
         setResult("Something went wrong. Please try again.");
       }
     } catch (error) {
@@ -41,21 +45,46 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-32 bg-[#FAF9F6] overflow-hidden font-sans">
-      {/* SVG BACKGROUND */}
-      <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="site-plan" width="200" height="200" patternUnits="userSpaceOnUse">
-            <path d="M 0 0 L 200 0 M 0 0 L 0 200" fill="none" stroke="#2C1E14" strokeWidth="0.5" />
-            <circle cx="100" cy="100" r="40" fill="none" stroke="#A68A64" strokeWidth="0.5" strokeDasharray="5 5" />
-            <path d="M 100 60 L 100 140 M 60 100 L 140 100" stroke="#A68A64" strokeWidth="0.5" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#site-plan)" />
+    <section 
+      ref={containerRef}
+      id="contact" 
+      className="relative py-32 bg-[#FAF9F6] overflow-hidden font-sans"
+    >
+      {/* --- DYNAMIC SVG BACKGROUND --- */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+        <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          {/* Static Circuit Path (The blueprint) */}
+          <path
+            id="circuit"
+            d="M0,500 Q250,100 500,500 T1000,500"
+            fill="none"
+            stroke="#A68A64"
+            strokeWidth="2"
+            strokeDasharray="10 10"
+          />
+          
+          {/* DRAW ANIMATION (animate(createDrawable('.circuit'), { draw: '0 1' })) */}
+          <motion.path
+            d="M0,500 Q250,100 500,500 T1000,500"
+            fill="none"
+            stroke="#2C1E14"
+            strokeWidth="3"
+            style={{ pathLength }}
+          />
+
+          {/* MOTION PATH ANIMATION (animate('.car', { ...createMotionPath('.circuit') })) */}
+          <motion.circle
+            r="8"
+            fill="#A68A64"
+            style={{
+              offsetPath: "path('M0,500 Q250,100 500,500 T1000,500')",
+              offsetDistance
+            }}
+          />
         </svg>
       </div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
-        
         {/* Header */}
         <div className="text-center mb-24">
           <div className="flex items-center justify-center space-x-4 mb-6">
@@ -65,14 +94,18 @@ export default function Contact() {
           </div>
           <h2 className="text-5xl md:text-8xl font-serif text-[#2C1E14] leading-none tracking-tighter mb-8">
             Begin Your <br />
-            <span className="italic bg-gradient-to-r from-[#2C1E14] via-[#A68A64] to-[#2C1E14] bg-clip-text text-transparent pb-2">
+            {/* SHAPE MORPHING CONCEPT on text via gradient */}
+            <motion.span 
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              className="italic bg-gradient-to-r from-[#2C1E14] via-[#A68A64] to-[#2C1E14] bg-[length:200%_auto] bg-clip-text text-transparent pb-2"
+            >
               Sanctuary
-            </span>
+            </motion.span>
           </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          
           {/* Form Side */}
           <div className="lg:col-span-7 bg-white p-10 md:p-16 shadow-[30px_30px_60px_-15px_rgba(44,30,20,0.08)] border border-stone-50">
             <form onSubmit={onSubmit} className="space-y-8">
@@ -147,7 +180,7 @@ export default function Contact() {
                   <MapPin className="w-6 h-6 text-[#A68A64] mt-1" />
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Location</p>
-                    <p className="text-stone-300 font-light">Race Course, Coimbatore<br />Tamil Nadu, India</p>
+                    <p className="text-stone-300 font-light">Rs puram, Coimbatore<br />Tamil Nadu, India</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-6">
@@ -167,7 +200,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="p-12 border border-stone-200">
+            <div className="p-12 border border-stone-200 bg-white/50 backdrop-blur-sm">
               <div className="flex items-center space-x-3 mb-6">
                 <Clock className="w-5 h-5 text-[#A68A64]" />
                 <h4 className="font-serif text-[#2C1E14] text-xl italic">Availability</h4>

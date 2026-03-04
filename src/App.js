@@ -1,39 +1,49 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Homepage from './components/Homepage';
-import Aboutus from './components/pages/Aboutus';
-import Contactus from './components/pages/Contactus';
-import BlogSectionClassic from './components/pages/Blog';
+
+// Keeping layout components synchronous for immediate UI shell rendering
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import PortfolioPage from './components/pages/portfolio';
-import Services from './components/Services';
 import Whatsapp from './components/whatsapp';
 import ScrollToTop from './components/scrolltotop';
 import Scrollup from './components/scrollup';
 
-// ADD THIS LINE HERE
-import ThankYou from './components/Thankyoupage'; 
+// Lazy load page-level components
+const Homepage = lazy(() => import('./components/Homepage'));
+const Aboutus = lazy(() => import('./components/pages/Aboutus'));
+const Contactus = lazy(() => import('./components/pages/Contactus'));
+const BlogSectionClassic = lazy(() => import('./components/pages/Blog'));
+const PortfolioPage = lazy(() => import('./components/pages/portfolio'));
+const Services = lazy(() => import('./components/Services'));
+const ThankYou = lazy(() => import('./components/Thankyoupage'));
+
+// Simple loading fallback (you can replace this with a branded Astra spinner)
+const PageLoader = () => (
+  <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#2C1E14' }}>
+    <div style={{ color: '#fff', fontFamily: 'Playfair Display' }}>Loading Astra...</div>
+  </div>
+);
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Navigation />
       <Whatsapp />
-      <ScrollToTop />
       <Scrollup />  
       
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<Aboutus />} />
-        <Route path="/blog" element={<BlogSectionClassic />} />
-        <Route path="/contactus" element={<Contactus />} />
-        <Route path="/port" element={<PortfolioPage />} />
-        <Route path="/services" element={<Services />} />
-        
-        {/* ADD THIS ROUTE HERE */}
-        <Route path="/thank-you" element={<ThankYou />} />
-      </Routes>
+      {/* Suspense handles the loading state while the lazy component is being fetched */}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/about" element={<Aboutus />} />
+          <Route path="/blog" element={<BlogSectionClassic />} />
+          <Route path="/contactus" element={<Contactus />} />
+          <Route path="/port" element={<PortfolioPage />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/thank-you" element={<ThankYou />} />
+        </Routes>
+      </Suspense>
       
       <Footer />
     </Router>

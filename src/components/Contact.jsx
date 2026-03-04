@@ -157,7 +157,7 @@ export default function Contact() {
                   <MapPin className="w-6 h-6 text-[#A68A64] mt-1" />
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#A68A64] font-bold mb-2">Location</p>
-                    <p className="text-stone-300 font-light">Race Course, Coimbatore<br />Tamil Nadu, India</p>
+                    <p className="text-stone-300 font-light">Rs puram, Coimbatore<br />Tamil Nadu, India</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-6">
