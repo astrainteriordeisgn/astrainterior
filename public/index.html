@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://images.unsplash.com" />
-    <link rel="preconnect" href="https://images.pexels.com" />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <link rel="dns-prefetch" href="https://images.pexels.com" />
 
     <link rel="preload" href="%PUBLIC_URL%/static/css/main.fcaa9797.css" as="style" />
     <link rel="preload" as="image" href="%PUBLIC_URL%/media/astrahero.webp" type="image/webp" fetchpriority="high" />
+    
     <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v37/nuFfPreSaL5UMxEzvy6rx92szbbZ.woff2" as="font" type="font/woff2" crossorigin />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5SXDKTYF3C"></script>
@@ -31,14 +31,6 @@
     <link rel="canonical" href="https://www.astrainteriordesign.com/" />
     <meta name="robots" content="index, follow" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.astrainteriordesign.com/" />
-    <meta property="og:title" content="Astra Interior | Luxury Design Atelier" />
-    <meta property="og:image" content="%PUBLIC_URL%/astra-og-image.webp" />
-
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href="%PUBLIC_URL%/static/css/main.fcaa9797.css" />
 
@@ -52,7 +44,7 @@
       }
       #root { min-height: 100dvh; }
       
-      /* LCP FIX: Immediate branding shell */
+      /* Instant Brand Shell */
       #initial-load-shell {
         position: fixed; top: 0; left: 0; width: 100%; height: 80px;
         display: flex; align-items: center; justify-content: space-between;
@@ -78,13 +70,13 @@
     <div id="root"></div>
 
     <script>
-      // Clean up the shell once React mounts
       window.addEventListener('load', () => {
         const shell = document.getElementById('initial-load-shell');
-        if (shell) shell.style.opacity = '0';
-        setTimeout(() => shell?.remove(), 500);
+        if (shell) {
+          shell.style.opacity = '0';
+          setTimeout(() => shell.remove(), 500);
+        }
       });
     </script>
-    <noscript>Please enable JavaScript to view the Astra Interior digital gallery.</noscript>
   </body>
 </html>
