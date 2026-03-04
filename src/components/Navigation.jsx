@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Mail, Phone, X, Menu, ArrowRight } from "lucide-react";
 import logo from "../assests/logo.webp";
@@ -6,23 +6,22 @@ import logo from "../assests/logo.webp";
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const observerTarget = useRef(null);
 
-  // 1. High-Performance Scroll Observer
+  // 1. Zero-Reflow Scroll Observer using IntersectionObserver
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const isScrolled = window.scrollY > 10; // Lower threshold for faster feedback
-          setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // If the sentinel is NOT intersecting, we have scrolled down
+        setScrolled(!entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: "20px 0px 0px 0px" } // Matches your previous 20px logic
+    );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
     };
@@ -30,22 +29,20 @@ export default function Navigation() {
     window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   // 2. Mobile Viewport & Scroll Locking
   useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow;
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
     }
-    return () => {
-      document.body.style.overflow = originalStyle;
-      document.body.style.touchAction = "auto";
-    };
   }, [isOpen]);
 
   const navLinks = useMemo(() => [
@@ -58,7 +55,9 @@ export default function Navigation() {
 
   return (
     <>
-      {/* HEADER: Added transform-gpu to offload transition to the GPU */}
+      {/* SENTINEL: This invisible div handles the scroll logic without JS math */}
+      <div ref={observerTarget} className="absolute top-0 left-0 w-full h-1 pointer-events-none" />
+
       <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 transform-gpu will-change-[padding,background-color] ${
           scrolled
@@ -68,7 +67,6 @@ export default function Navigation() {
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between">
           
-          {/* LOGO: The LCP Target */}
           <Link
             to="/"
             onClick={() => setIsOpen(false)}
@@ -79,8 +77,8 @@ export default function Navigation() {
                 src={logo} 
                 alt="Astra Logo" 
                 className="h-10 w-10 md:h-12 md:w-12 object-contain"
-                loading="eager" // Do NOT lazy load branding
-                fetchPriority="high" // Critical for lowering that 2,330ms delay
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             <div className="flex flex-col">
@@ -91,7 +89,6 @@ export default function Navigation() {
             </div>
           </Link>
 
-          {/* DESKTOP NAV */}
           <nav className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <NavLink
@@ -115,7 +112,6 @@ export default function Navigation() {
             </Link>
           </nav>
 
-          {/* MOBILE TOGGLE: Optimized hit-box */}
           <button
             onClick={() => setIsOpen(true)}
             className="lg:hidden flex items-center space-x-2 p-3 -mr-3"
@@ -127,7 +123,7 @@ export default function Navigation() {
         </div>
       </header>
 
-      {/* MOBILE OVERLAY */}
+      {/* MOBILE OVERLAY & SIDEBAR (Remains the same as your high-quality version) */}
       <div 
         className={`fixed inset-0 bg-stone-900/20 backdrop-blur-sm z-[60] transition-opacity duration-500 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -135,7 +131,6 @@ export default function Navigation() {
         onClick={() => setIsOpen(false)}
       />
 
-      {/* SIDEBAR: Using dvh for mobile browser bar compatibility */}
       <aside
         className={`fixed top-0 right-0 w-[85%] max-w-[400px] h-[100dvh] bg-[#FAF9F6] z-[70] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -143,7 +138,7 @@ export default function Navigation() {
       >
         <div className="flex justify-between items-center px-8 py-8 border-b border-stone-100">
           <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-stone-400">Navigation</span>
-          <button onClick={() => setIsOpen(false)} className="p-2 hover:rotate-90 transition-transform">
+          <button onClick={() => setIsOpen(false)} aria-label="Close menu" className="p-2 hover:rotate-90 transition-transform">
             <X className="w-6 h-6 text-[#2C1E14]" />
           </button>
         </div>
@@ -167,16 +162,16 @@ export default function Navigation() {
         </nav>
 
         <div className="p-10 bg-white border-t border-stone-100 space-y-6">
-          <div className="flex flex-col space-y-3">
-            <a href="mailto:astrainterior83@gmail.com" className="flex items-center space-x-3 text-xs tracking-wide text-stone-600">
+          <address className="flex flex-col space-y-3 not-italic">
+            <a href="mailto:astrainterior83@gmail.com" className="flex items-center space-x-3 text-xs tracking-wide text-stone-600 hover:text-[#A68A64] transition-colors">
               <Mail className="w-4 h-4 text-[#A68A64]" />
               <span>astrainterior83@gmail.com</span>
             </a>
-            <a href="tel:+919345445898" className="flex items-center space-x-3 text-xs tracking-wide text-stone-600">
+            <a href="tel:+919345445898" className="flex items-center space-x-3 text-xs tracking-wide text-stone-600 hover:text-[#A68A64] transition-colors">
               <Phone className="w-4 h-4 text-[#A68A64]" />
               <span>+91 93454 45898</span>
             </a>
-          </div>
+          </address>
         </div>
       </aside>
     </>
